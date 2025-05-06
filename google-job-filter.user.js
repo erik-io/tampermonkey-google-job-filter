@@ -24,7 +24,7 @@
             jobElement.style.border = '2px solid red'; // Behalten wir zum Testen erstmal bei
 
             // --- NEU: Informationen extrahieren ---
-            const dateSelector = '.Yf9oye';
+            const dateSelector = '.Yf9oye[aria-label^="Gepostet:"]';
             const companySelector = '.a3jPc';
 
             const dateElement = jobElement.querySelector(dateSelector);
