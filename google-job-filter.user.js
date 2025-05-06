@@ -13,4 +13,17 @@
     'use strict';
 
     console.log('Google Job Filter ist aktiv!');
+
+    const jobSelector = '.MQUd2b';
+    const jobElements = document.querySelectorAll(jobSelector);
+
+    if (jobElements.length > 0) {
+        console.log('Es wurden Stellenangebote gefunden!');
+        console.log('Anzahl der Stellenangebote:', jobElements.length);
+        jobElements.forEach((element, index) => {
+            console.log('Stellenangebot ' + (index + 1) + ':', element);
+        })
+    } else {
+        console.log('Keine Stellenangebote gefunden.');
+    }
 })();
