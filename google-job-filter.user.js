@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         New Userscript
-// @namespace    http://tampermonkey.net/
-// @version      2025-05-06
-// @description  try to take over the world!
-// @author       You
-// @match        http://*/*
+// @name         Google Job Filter
+// @namespace    https://github.com/erik-io
+// @version      0.1
+// @description  Markiert und filtert Stellenangebote
+// @author       erik-io
+// @match        https://www.google.de/search*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
@@ -12,5 +12,5 @@
 (function() {
     'use strict';
 
-    // Your code here...
+    console.log('Google Job Filter ist aktiv!');
 })();
