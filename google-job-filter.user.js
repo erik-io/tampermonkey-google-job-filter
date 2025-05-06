@@ -20,13 +20,28 @@
     if (jobElements.length > 0) {
         console.log(`Es wurden ${jobElements.length} Stellenangebote mit dem "${jobSelector}"-Selektor gefunden!`);
 
-        jobElements.forEach((element, index) => {
-            console.log('Stellenangebot ' + (index + 1) + ':', element);
+        jobElements.forEach((jobElement, index) => {
+            jobElement.style.border = '2px solid red'; // Behalten wir zum Testen erstmal bei
 
-            // --- HIER STARTEN WIR MIT MANIPULATIONEN ---
-            // Als ersten Test: Lass uns jedem gefundenen Job einen roten Rahmen geben
-            // Damit sehen wir direkt auf der Seite, welche Elemente wir erwischt haben.
-            element.style.border = '2px solid red';
+            // --- NEU: Informationen extrahieren ---
+            const dateSelector = '.Yf9oye';
+            const companySelector = '.a3jPc';
+
+            const dateElement = jobElement.querySelector(dateSelector);
+            const companyElement = jobElement.querySelector(companySelector);
+
+            let dateText = 'Datum nicht gefunden';
+            if (dateElement) {
+                dateText = dateElement.innerText;
+            }
+
+            let companyText = 'Unternehmen nicht gefunden';
+            if (companyElement) {
+                companyText = companyElement.innerText;
+            }
+
+            console.log(`Stellenangebot ${index + 1}: Firma: "${companyText}", Datum: "${dateText}"`);
+            // --- ENDE NEU ---
         })
     } else {
         console.log(`Keine Stellenangebote mit dem Selektor "${jobSelector} auf dieser Seite gefunden.`);
