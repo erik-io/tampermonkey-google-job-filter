@@ -14,16 +14,21 @@
 
     console.log('Google Job Filter ist aktiv!');
 
-    const jobSelector = '.MQUd2b';
+    const jobSelector = '.EimVGf';
     const jobElements = document.querySelectorAll(jobSelector);
 
     if (jobElements.length > 0) {
-        console.log('Es wurden Stellenangebote gefunden!');
-        console.log('Anzahl der Stellenangebote:', jobElements.length);
+        console.log(`Es wurden ${jobElements.length} Stellenangebote mit dem "${jobSelector}"-Selektor gefunden!`);
+
         jobElements.forEach((element, index) => {
             console.log('Stellenangebot ' + (index + 1) + ':', element);
+
+            // --- HIER STARTEN WIR MIT MANIPULATIONEN ---
+            // Als ersten Test: Lass uns jedem gefundenen Job einen roten Rahmen geben
+            // Damit sehen wir direkt auf der Seite, welche Elemente wir erwischt haben.
+            element.style.border = '2px solid red';
         })
     } else {
-        console.log('Keine Stellenangebote gefunden.');
+        console.log(`Keine Stellenangebote mit dem Selektor "${jobSelector} auf dieser Seite gefunden.`);
     }
 })();
