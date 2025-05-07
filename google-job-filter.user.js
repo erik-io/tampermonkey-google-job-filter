@@ -10,7 +10,7 @@
 // @grant        GM_getValue
 // ==/UserScript==
 
-console.log('--- GJF SCRIPT v0.2-test1 --- ' + new Date().toLocaleTimeString() + ' ---');
+console.log('--- GJF SCRIPT v0.2 --- ' + new Date().toLocaleTimeString() + ' ---');
 
 // --- Konfiguration ---
 const HIDDEN_COMPANIES_KEY = 'googleJobFilter_hiddenCompanies';
@@ -59,20 +59,22 @@ function getPostAge(dateText) {
 (function() {
     'use strict';
 
-    console.log('Google Job Filter ist aktiv!');
+    // --- Konfiguration ---
+    const jobSelector = '.EimVGf'; // Selector für die Stellenangebote
+    const dateSelector = '.Yf9oye[aria-label^="Gepostet:"]'; // Selector für das Datum mit dem Attribut "aria-label" das mit "Gepostet:" beginnt
+    const companySelector = '.a3jPc'; // Selector für den Firmennamen
 
     const testListe = getHiddenCompanies();
     console.log('Aktuelle Liste der versteckten Unternehmen:', testListe);
 
-    const jobSelector = '.EimVGf';
+
     const jobElements = document.querySelectorAll(jobSelector);
 
     if (jobElements.length > 0) {
         console.log(`Es wurden ${jobElements.length} Stellenangebote mit dem "${jobSelector}"-Selektor gefunden!`);
 
         jobElements.forEach((jobElement, index) => {
-            const dateSelector = '.Yf9oye[aria-label^="Gepostet:"]'; // Selector für das Datum mit dem Attribut "aria-label" das mit "Gepostet:" beginnt
-            const companySelector = '.a3jPc'; // Selector für den Firmennamen
+
 
             const dateElement = jobElement.querySelector(dateSelector); // querySelector für das Datum statt querySelectorAll
             const companyElement = jobElement.querySelector(companySelector); // querySelector für den Firmennamen statt querySelectorAll
