@@ -20,22 +20,20 @@ function getHiddenCompanies() {
     return JSON.parse(GM_getValue(HIDDEN_COMPANIES_KEY, '[]'));
 }
 
-// --- NEU: Funktion zum Hinzufügen von Unternehmen zur Liste ---
 function addCompanyToHiddenList(companyName) {
     const companyNameLower = companyName.toLowerCase(); // Für Speicherung und Vergleich normalisieren
     let hiddenCompanies = getHiddenCompanies(); // Holt die aktuelle Liste
 
     if (hiddenCompanies.includes(companyNameLower)) {
-        console.log(`Firma "${companyName}" ist bereits auf der Liste.`);
+        console.log(`[GJF] Firma "${companyName}" ist bereits auf der Liste.`);
         return false; // Firma ist bereits auf der Liste
     } else {
         hiddenCompanies.push(companyNameLower); // Zum Array hinzufügen
         GM_setValue(HIDDEN_COMPANIES_KEY, JSON.stringify(hiddenCompanies)); // Aktualisierte Liste speichern
-        console.log(`Firma "${companyName}" wurde zur Liste hinzugefügt.`);
+        console.log(`[GJF] Firma "${companyName}" wurde zur Liste hinzugefügt.`);
         return true; // Firma wurde erfolgreich hinzugefügt
     }
 }
-// --- Ende NEU ---
 
 function getPostAge(dateText) {
     // Wenn das Datum nicht gefunden wird, geben wir Infinity zurück
@@ -59,19 +57,19 @@ function getPostAge(dateText) {
 (function() {
     'use strict';
 
-    // --- Konfiguration ---
-    const jobSelector = '.EimVGf'; // Selector für die Stellenangebote
-    const dateSelector = '.Yf9oye[aria-label^="Gepostet:"]'; // Selector für das Datum mit dem Attribut "aria-label" das mit "Gepostet:" beginnt
-    const companySelector = '.a3jPc'; // Selector für den Firmennamen
+    // --- CSS-Selektoren ---
+    const jobSelector = '.EimVGf'; // Hauptcontainer für ein einzelnes Stellenangebot
+    const companySelector = '.a3jPc'; // Element, das den Firmennamen enthält
+    const dateSelector = '.Yf9oye[aria-label^="Gepostet:"]'; // Element, das das Veröffentlichungsdatum enthält
+    const shareButtonSelector = '[aria-label="Teilen"] .niO4u'; // Element, das den Teilen-Button enthält
 
-    const testListe = getHiddenCompanies();
-    console.log('Aktuelle Liste der versteckten Unternehmen:', testListe);
-
+    const hiddenCompaniesList = getHiddenCompanies();
+    console.log('[GJF] Aktuelle Liste der versteckten Unternehmen:', hiddenCompaniesList);
 
     const jobElements = document.querySelectorAll(jobSelector);
 
     if (jobElements.length > 0) {
-        console.log(`Es wurden ${jobElements.length} Stellenangebote mit dem "${jobSelector}"-Selektor gefunden!`);
+        console.log(`[GJF] Es wurden ${jobElements.length} Stellenangebote mit dem "${jobSelector}"-Selektor gefunden!`);
 
         jobElements.forEach((jobElement, index) => {
 
@@ -88,21 +86,42 @@ function getPostAge(dateText) {
             // Falls die Firma nicht gefunden wird, setzen wir den Text auf "Unternehmen nicht gefunden"
             let companyText = 'Unternehmen nicht gefunden';
             if (companyElement) {
-                companyText = companyElement.innerText;
+                companyText = companyElement.innerText.trim();
             }
 
             // Stellenangebot X: Firma: "Unternehmen", Datum: "Datum"
-            console.log(`Stellenangebot ${index + 1}: Firma: "${companyText}", Datum: "${dateText}"`);
+            console.log(`[GJF] Stellenangebot ${index + 1}: Firma: "${companyText}", Datum: "${dateText}"`);
+
+            // NEU: Überprüfen, ob die Firma auf der Liste der versteckten Firmen steht ---
+            // Diese Prüfung erfolgt, bevor andere Aktionen für das Stellenangebot durchgeführt werden
+            if (companyText !== 'Unternehmen nicht gefunden' && hiddenCompaniesList.includes(companyText.toLowerCase())) {
+                console.log(`[GJF]   -> Jobangebot von "${companyText}" wird ausgeblendet (Firma ist auf der Blacklist).`);
+                jobElement.style.display = 'none'; // Versteckt das Stellenangebot
+                return; // Beendet die Verarbeitung dieses Stellenangebots
+            }
+            // --- ENDE NEU ---
 
             const postAge = getPostAge(dateText);
 
             if (postAge < 7) { // Jünger als 7 Tage
                 jobElement.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
                 jobElement.style.borderLeft = '5px solid gold';
-                console.log(`   -> Hervorgehoben! Alter: ${postAge} Tag(e)`);
+                console.log(`[GJF]   -> Hervorgehoben! Alter: ${postAge} Tag(e)`);
             }
+
+            // --- NEU: "Teilen"-Button finden und loggen ---
+            if (companyText !== 'Unternehmen nicht gefunden') {
+                const shareButton = jobElement.querySelector(shareButtonSelector);
+                if (shareButton) {
+                    console.log(`[GJF]   -> Job ${index + 1}: "Teilen"-Button für "${companyText}" gefunden.`, shareButton);
+                }
+                else {
+                    console.warn(`[GJF]   -> Job ${index + 1}: Firma "${companyText}" hat KEINEN "Teilen"-Button mit Selektor "${shareButtonSelector} gefunden!`);
+                }
+            }
+            // --- ENDE NEU ---
         })
     } else {
-        console.log(`Keine Stellenangebote mit dem Selektor "${jobSelector}" auf dieser Seite gefunden.`);
+        console.log(`[GJF] Keine Stellenangebote mit dem Selektor "${jobSelector}" auf dieser Seite gefunden.`);
     }
 })();
