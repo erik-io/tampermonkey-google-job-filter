@@ -54,7 +54,7 @@ function getPostAge(dateText) {
 }
 
 // Immediately Invoked Function Expression (IIFE)
-(function() {
+(function () {
     'use strict';
 
     // --- CSS-Selektoren ---
@@ -112,36 +112,44 @@ function getPostAge(dateText) {
                 if (shareButton) {
                     console.log(`[GJF]   -> Job ${index + 1}: "Teilen"-Button für Firma "${companyText}" gefunden und Event-Listener wird hinzugefügt.`);
 
-                    // --- NEU: Event-Listener hinzufügen
-                    shareButton.addEventListener('click', function(event) {
-                        event.preventDefault(); // Standard Aktion des Buttons verhindern
-                        event.stopPropagation(); // Klick-Event nicht weitergeben
-
-                        const confirmationMessage = `Möchtest du Stellenangebote von "${companyText}" auf Google Jobs verstecken?`;
-                        if (window.confirm(confirmationMessage)) {
-                            // Benutzer hat 'OK' gedrückt
-                            if (addCompanyToHiddenList(companyText)) {
-                                // Firma wurde erfolgreich hinzugefügt
-                                console.log(`[GJF] Nutzer hat "${companyText}" zur Blacklist hinzugefügt.`);
-
-                                // Versteckt das Stellenangebot
-                                jobElement.style.display = 'none';
-
-                                // Aktualisieren der hiddenCompaniesList
-                                hiddenCompaniesList = getHiddenCompanies();
-                            } else {
-                                // Firma war bereits auf der Liste
-                                console.log(`[GJF] "${companyText}" war bereits auf der Blacklist oder konnte nicht hinzugefügt werden.`)
-                                alert(`"${companyText}" ist bereits auf der Blacklist.`)
-                            }
-                        } else {
-                            // Benutzer hat auf "Abbrechen" geklickt
-                            console.log(`[GJF] Nutzer hat abgebrochen: "${companyText}" wird nicht versteckt.`)
-                        }
+                    // --- NEU: Logo ändern vom ehemaligen "Teilen"-Button ---
+                    const iconContainer = shareButton.querySelector('.kHtcsd > span');
+                    if (iconContainer) {
+                        // Quelle: Google Material Icons (Apache-2.0 Lizenz)
+                        // https://fonts.google.com/icons?icon.category=Actions&selected=Material+Symbols+Outlined:visibility_off:FILL@0;wght@400;GRAD@0;opsz@20&icon.size=18&icon.color=%231f1f1f&icon.query=visi&icon.platform=web
+                        const visibility_off = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#1f1f1f"><path d="m637-425-62-62q4-38-23-65.5T487-576l-62-62q13-5 27-7.5t28-2.5q70 0 119 49t49 119q0 14-2.5 28t-8.5 27Zm133 133-52-52q36-28 65.5-61.5T833-480q-49-101-144.5-158.5T480-696q-26 0-51 3t-49 10l-58-58q38-15 77.5-21t80.5-6q143 0 261.5 77.5T912-480q-22 57-58.5 103.5T770-292Zm-2 202L638-220q-38 14-77.5 21t-80.5 7q-143 0-261.5-77.5T48-480q22-57 58-104t84-85L90-769l51-51 678 679-51 51ZM241-617q-35 28-65 61.5T127-480q49 101 144.5 158.5T480-264q26 0 51-3.5t50-9.5l-45-45q-14 5-28 7.5t-28 2.5q-70 0-119-49t-49-119q0-14 3.5-28t6.5-28l-81-81Zm287 89Zm-96 96Z"/></svg>`
+                        iconContainer.innerHTML = visibility_off;
                     }
+                    // --- ENDE NEU ---
+
+                    shareButton.addEventListener('click', function (event) {
+                            event.preventDefault(); // Standard Aktion des Buttons verhindern
+                            event.stopPropagation(); // Klick-Event nicht weitergeben
+
+                            const confirmationMessage = `Möchtest du Stellenangebote von "${companyText}" auf Google Jobs verstecken?`;
+                            if (window.confirm(confirmationMessage)) {
+                                // Benutzer hat 'OK' gedrückt
+                                if (addCompanyToHiddenList(companyText)) {
+                                    // Firma wurde erfolgreich hinzugefügt
+                                    console.log(`[GJF] Nutzer hat "${companyText}" zur Blacklist hinzugefügt.`);
+
+                                    // Versteckt das Stellenangebot
+                                    jobElement.style.display = 'none';
+
+                                    // Aktualisieren der hiddenCompaniesList
+                                    hiddenCompaniesList = getHiddenCompanies();
+                                } else {
+                                    // Firma war bereits auf der Liste
+                                    console.log(`[GJF] "${companyText}" war bereits auf der Blacklist oder konnte nicht hinzugefügt werden.`)
+                                    alert(`"${companyText}" ist bereits auf der Blacklist.`)
+                                }
+                            } else {
+                                // Benutzer hat auf "Abbrechen" geklickt
+                                console.log(`[GJF] Nutzer hat abgebrochen: "${companyText}" wird nicht versteckt.`)
+                            }
+                        }
                     )
-                }
-                else {
+                } else {
                     console.warn(`[GJF]   -> Job ${index + 1}: Firma "${companyText}" hat KEINEN "Teilen"-Button mit Selektor "${shareButtonSelector} gefunden!`);
                 }
             }
